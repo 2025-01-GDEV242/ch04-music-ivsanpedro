@@ -15,12 +15,15 @@ public class MusicOrganizer
     private MusicPlayer player;
     // A reader that can read music files and load them as tracks.
     private TrackReader reader;
+    // An ArrayList for storing the index (tracks) that have already played.
+    private ArrayList<Integer> repeats;
 
     /**
      * Create a MusicOrganizer
      */
     public MusicOrganizer()
     {
+        repeats = new ArrayList<>();
         tracks = new ArrayList<>();
         player = new MusicPlayer();
         reader = new TrackReader();
@@ -137,6 +140,26 @@ public class MusicOrganizer
         int randomNum = random.nextInt(tracks.size());
         if(tracks.size() > 0) {
             player.startPlaying(tracks.get(randomNum).getFilename());
+        }
+    }
+    
+    /**
+     * Play every track randomly in the list exactly once
+     */
+    public void playRandomOnce()
+    {
+        Random random = new Random();
+        int randomNum = random.nextInt(tracks.size());
+        for (int count = 0; count <= tracks.size(); count++)
+        {
+            if(tracks.size() > 0 && !(repeats.contains(randomNum))) {
+                Track track = tracks.get(randomNum);
+                player.playSample(track.getFilename());
+                //player.startPlaying(tracks.get(randomNum).getFilename());
+                repeats.add(randomNum); //Add randomNum to list of played tracks
+                
+            }
+            playRandomOnce();
         }
     }
     
